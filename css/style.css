@@ -1,0 +1,841 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  background: #fff;
+  color: #1a1a1b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  /* Reserve space for iPhone home indicator */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ── Header ── */
+
+header {
+  width: 100%;
+  max-width: 500px;
+  padding: 6px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#day-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+#day-stars {
+  color: #b59a10;
+}
+
+#date-btn {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+  color: #1a1a1b;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #d3d6da;
+  padding: 1px 2px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#date-btn:hover { border-bottom-color: #1a1a1b; }
+
+/* Playing an earlier day - flag it so the header never lies about the date */
+#date-btn.past {
+  color: #b59a10;
+  border-bottom-color: #b59a10;
+}
+
+#help-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #1a1a1b;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#help-btn:hover { background: #43464a; }
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+#stats-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #1a1a1b;
+  color: #fff;
+  font-size: 1.05rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#stats-btn:hover { background: #43464a; }
+
+/* ── Word progress tracker ── */
+
+#word-progress {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.progress-slot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #d3d6da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #878a8c;
+  transition: all 0.3s ease;
+}
+
+.progress-slot.active {
+  border-color: #1a1a1b;
+  color: #1a1a1b;
+}
+
+.progress-slot.completed {
+  border-color: #b59a10;
+  background: #b59a10;
+  color: #fff;
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── End-of-day summary board ── */
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.summary-row .progress-slot {
+  margin-right: 2px;
+}
+
+/* Magnifying glass linking to a word's definition, shown in the summary. */
+.define-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 48px;
+  margin-left: 2px;
+  color: #878a8c;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.define-link:hover,
+.define-link:focus-visible {
+  color: #1a1a1b;
+}
+
+.summary-row .tile {
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
+  background: #fff;
+  border: 6px solid #1a1a1b;
+  border-radius: 50%;
+  color: #1a1a1b;
+}
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Visually hidden but available to search engines and screen readers. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Small descriptive line under the game; gives crawlers visible on-page text
+   without disturbing the full-viewport board. */
+.site-footer {
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 500px;
+  padding: 4px 8px;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #878a8c;
+}
+
+/* ── Main layout ── */
+
+main {
+  flex: 1;
+  min-height: 0;           /* allow shrinking inside the flex body */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 8px 8px;
+  gap: 6px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* ── Tile board ── */
+
+#board {
+  flex: 1;                 /* grow to fill available space */
+  min-height: 0;           /* allow shrinking */
+  overflow-y: auto;        /* scroll when guesses overflow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding-bottom: 4px;
+}
+
+.row {
+  display: flex;
+  gap: 5px;
+}
+
+.tile {
+  width: 62px;
+  height: 62px;
+  border: 2px solid #d3d6da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* Evaluated tile states */
+.tile.absent {
+  background: #1e2d3d;
+  border-color: #1e2d3d;
+  color: #c0c4c8;
+}
+
+.tile.present {
+  background: #b59a10;
+  border-color: #b59a10;
+  color: #fff;
+}
+
+.tile.correct {
+  background: #fff;
+  border: 8px solid #1a1a1b;
+  border-radius: 50%;
+  color: #1a1a1b;
+}
+
+/* Active (current input) row */
+.row.active .tile {
+  border-color: #878a8c;
+}
+
+.tile.invalid {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+/* ── Result / star rating ── */
+
+#result,
+#keyboard {
+  flex-shrink: 0;
+}
+
+#result {
+  font-size: 2rem;
+  letter-spacing: 0.15em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #b59a10;
+}
+
+#result:empty {
+  display: none;
+}
+
+.result-hint {
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: #878a8c;
+  margin-top: 2px;
+}
+
+.result-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.result-action {
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 6px 20px;
+  border-radius: 6px;
+  border: 2px solid #1a1a1b;
+  background: #1a1a1b;
+  color: #fff;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+}
+
+.result-action:hover { background: #43464a; }
+
+.result-action.secondary {
+  background: #fff;
+  color: #1a1a1b;
+}
+
+.result-action.secondary:hover { background: #f0f0f0; }
+
+/* ── On-screen keyboard ── */
+
+#keyboard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* Row gap shrinks on short screens (landscape mobile) */
+  gap: clamp(5px, 1vh, 8px);
+}
+
+.key-row {
+  display: flex;
+  /* Key gap shrinks on narrow screens */
+  gap: clamp(4px, 1vw, 6px);
+}
+
+.key {
+  /* Fill the row evenly; no min/max-width so it scales with the container */
+  flex: 1;
+  /* Height fluid between 42 px (landscape phone) and 58 px (desktop) */
+  height: clamp(42px, 8vh, 58px);
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: #d3d6da;
+  font-family: inherit;
+  /* Font fluid between 0.65 rem (narrow) and 0.85 rem (wide) */
+  font-size: clamp(0.65rem, 2.2vw, 0.85rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Prevent double-tap zoom on touch devices */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.key.wide {
+  /* Enter / Backspace take 1.5× the space of a letter key */
+  flex: 1.5;
+  font-size: clamp(0.75rem, 1.8vw, 0.75rem);
+}
+
+.key.wide[data-key="Backspace"] {
+  flex: 2;
+  font-size: clamp(1.25rem, 3.5vw, 2rem);
+}
+
+.key:hover {
+  background: #b3b6ba;
+}
+
+/* Keyboard key hint states - must not be overridden by :hover */
+.key.absent {
+  background: #1e2d3d;
+  color: #c0c4c8;
+}
+
+.key.present {
+  background: #b59a10;
+  color: #fff;
+}
+
+.key.correct {
+  position: relative;
+  background: transparent;
+  color: #1a1a1b;
+}
+
+.key.correct::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: clamp(42px, 8vh, 58px);
+  border-radius: 50%;
+  background: #fff;
+  border: 6px solid #1a1a1b;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.key.absent:hover  { background: #162230; }
+.key.present:hover { background: #b5a040; }
+.key.correct:hover { background: transparent; }
+.key.correct:hover::before { background: #f0f0f0; }
+
+/* ── Help modal ── */
+
+[hidden] { display: none !important; }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-panel {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  padding: 28px 24px 20px;
+  width: min(400px, 92vw);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+  color: #555;
+}
+
+.modal-close:hover { color: #1a1a1b; }
+
+.modal-panel h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.modal-panel h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-top: 1px solid #d3d6da;
+  margin: 14px 0 8px;
+  padding-top: 12px;
+}
+
+.modal-panel p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 8px;
+}
+
+.help-icon {
+  vertical-align: -2px;
+}
+
+.help-game-num {
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-bottom: 2px solid #d3d6da;
+  white-space: nowrap;
+}
+
+.help-tiles {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.help-tile-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+}
+
+.help-tile-row .tile {
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ── Game picker modal ── */
+
+.game-summary {
+  min-height: 1.4em;      /* hold the row so the list doesn't jump */
+  margin: 10px 0 12px;
+  font-weight: 700;
+  color: #878a8c;
+}
+
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 45vh;
+  overflow-y: auto;
+  margin-bottom: 14px;
+  /* Room so the scrollbar never overlaps the score column. */
+  padding-right: 2px;
+}
+
+.game-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  text-align: left;
+  padding: 9px 12px;
+  border: 2px solid #d3d6da;
+  border-radius: 6px;
+  background: #fff;
+  color: #1a1a1b;
+  cursor: pointer;
+}
+
+.game-row:hover { background: #f0f0f0; }
+
+/* The game currently loaded on the board. */
+.game-row.current {
+  border-color: #1a1a1b;
+}
+
+.game-num {
+  font-weight: 700;
+  min-width: 3.2em;
+}
+
+.game-date {
+  color: #878a8c;
+  flex: 1;
+}
+
+.game-score {
+  font-weight: 700;
+  color: #878a8c;
+  white-space: nowrap;
+}
+
+.game-score.done { color: #b59a10; }
+.game-score.progress { color: #1a1a1b; }
+
+.date-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.date-action {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 2px solid #d3d6da;
+  background: #fff;
+  color: #1a1a1b;
+  cursor: pointer;
+}
+
+.date-action:hover { background: #f0f0f0; }
+
+.date-action.primary {
+  background: #1a1a1b;
+  border-color: #1a1a1b;
+  color: #fff;
+}
+
+.date-action.primary:hover { background: #43464a; }
+
+.date-action:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.date-action.primary:disabled:hover { background: #1a1a1b; }
+
+/* ── Stats modal ── */
+
+.stat-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.stat-tile {
+  text-align: center;
+  padding: 8px 4px;
+}
+
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #878a8c;
+}
+
+.star-dist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.star-dist-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.star-dist-label {
+  width: 2em;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.star-dist-track {
+  flex: 1;
+  min-width: 0;
+}
+
+.star-dist-bar {
+  height: 20px;
+  border-radius: 3px;
+  background: #878a8c;
+  min-width: 8px;
+}
+
+.star-dist-count {
+  min-width: 4.5em;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.stats-footer {
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #878a8c;
+  font-weight: 700;
+  text-align: center;
+}
+
+.stats-actions {
+  display: flex;
+  margin-top: 16px;
+}
+
+/* Ko-fi button, at the foot of the stats and help modals. */
+.modal-panel .kofi {
+  text-align: center;
+  margin: 14px 0 0;
+}
+
+.kofi img { vertical-align: middle; }
+
+/* ── Transfer modals ── */
+
+.transfer-input {
+  display: block;
+  width: 100%;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  padding: 8px 10px;
+  border: 2px solid #d3d6da;
+  border-radius: 6px;
+  resize: vertical;
+  word-break: break-all;
+  margin-bottom: 8px;
+}
+
+.transfer-input:focus {
+  outline: none;
+  border-color: #1a1a1b;
+}
+
+.modal-panel .transfer-status {
+  min-height: 1.4em;
+  margin: 10px 0 0;
+  font-weight: 700;
+  color: #878a8c;
+}
+
+.modal-panel .transfer-status.error { color: #c0392b; }
+
+.modal-panel .transfer-note {
+  font-size: 0.8rem;
+  color: #878a8c;
+  margin-bottom: 14px;
+}
+
+/* ── Animations ── */
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-6px); }
+  40%       { transform: translateX(6px); }
+  60%       { transform: translateX(-4px); }
+  80%       { transform: translateX(4px); }
+}
+
+.row.shake {
+  animation: shake 0.4s ease;
+}
+
+/* ── Responsive adjustments ── */
+
+/* The date button is wider than the round counter it replaced - give the
+   progress tracker less room on narrow phones so the header still fits */
+@media (max-width: 380px) {
+  #day-info {
+    gap: 8px;
+    font-size: 0.8rem;
+  }
+
+  #word-progress { gap: 5px; }
+
+  .progress-slot {
+    width: 26px;
+    height: 26px;
+    font-size: 0.6rem;
+  }
+
+  .progress-slot.completed {
+    font-size: 0.55rem;
+  }
+
+  #stats-btn, #help-btn {
+    width: 28px;
+    height: 28px;
+  }
+
+  #stats-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .stat-value { font-size: 1.1rem; }
+}
+
+/* Shrink board tiles on short screens so keyboard stays visible */
+@media (max-height: 620px) {
+  .tile {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
+
+  main {
+    padding-top: 8px;
+    gap: 8px;
+  }
+
+  .progress-slot {
+    width: 26px;
+    height: 26px;
+    font-size: 0.6rem;
+  }
+
+  .progress-slot.completed {
+    font-size: 0.55rem;
+  }
+
+  .summary-row .tile {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    border-width: 5px;
+  }
+
+  .summary-row .progress-slot {
+    width: 26px;
+    height: 26px;
+  }
+
+  .define-link {
+    height: 40px;
+  }
+
+  /* The game list scrolls, so keep it short enough to leave the summary and
+     "Jump to today" button visible on cramped screens. */
+  .game-list {
+    max-height: 38vh;
+  }
+}
