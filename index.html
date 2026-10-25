@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Magic Flute Words - Free Daily 5-Letter Word Game</title>
+  <meta name="description" content="A free daily five-letter word game: guess five hidden words a day, starting from three clue words (MAGIC, FLUTE, WORDS) that reveal 15 letters." />
+  <link rel="canonical" href="https://www.magicflutewords.com/" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Magic Flute Words" />
+  <meta property="og:title" content="Magic Flute Words - Free Daily 5-Letter Word Game" />
+  <meta property="og:description" content="Guess five hidden five-letter words a day, starting from three clue words that reveal 15 letters. A new puzzle every day." />
+  <meta property="og:url" content="https://www.magicflutewords.com/" />
+  <meta property="og:image" content="https://www.magicflutewords.com/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Magic Flute Words - Free Daily 5-Letter Word Game" />
+  <meta name="twitter:description" content="Guess five hidden five-letter words a day, starting from three clue words that reveal 15 letters. A new puzzle every day." />
+  <meta name="twitter:image" content="https://www.magicflutewords.com/og-image.png" />
+
+  <!-- Structured data: WebSite gives Google the site name to show in results;
+       VideoGame describes the game itself. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "Magic Flute Words",
+        "url": "https://www.magicflutewords.com/"
+      },
+      {
+        "@type": "VideoGame",
+        "name": "Magic Flute Words",
+        "url": "https://www.magicflutewords.com/",
+        "description": "A free daily five-letter word game: guess five hidden words a day, starting from three clue words (MAGIC, FLUTE, WORDS) that reveal 15 letters.",
+        "genre": ["Word game", "Puzzle"],
+        "gamePlatform": "Web browser",
+        "applicationCategory": "Game",
+        "operatingSystem": "Any",
+        "isAccessibleForFree": true,
+        "image": "https://www.magicflutewords.com/og-image.png",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Icons & PWA -->
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="favicon-16.png" sizes="16x16" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-title" content="Magic Flute" />
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- Cache busting: bump the shared ?v= below (and on the scripts before
+       </body>) whenever the CSS, JS, or word list changes, so returning
+       browsers load the new file instead of a cached copy. -->
+  <link rel="stylesheet" href="css/style.css?v=9" />
+  <!-- Google Analytics is loaded by js/magic-flute-words.js, after consent
+       where that's needed - see "Analytics consent" there. -->
+</head>
+<body>
+
+  <!-- Descriptive intro for search engines and screen readers. Visually
+       hidden so the game board's full-screen layout is unchanged. -->
+  <div class="sr-only">
+    <h1>Magic Flute Words - a free daily five-letter word game</h1>
+    <p>
+      Magic Flute Words is a free online word game you play in your browser,
+      with no sign-up and nothing to install. Each day you guess five hidden
+      five-letter words, one at a time, using only valid five-letter words as
+      guesses. Every word starts from three free clue words - MAGIC, FLUTE, 
+      and WORDS - which together reveal 15 letters of the alphabet. A new
+      puzzle arrives every day, and you can play any past game.
+    </p>
+  </div>
+
+  <header>
+    <div id="day-info">
+      <button id="date-btn" aria-label="Change day" title="Change day"></button>
+      <span id="day-stars"></span>
+    </div>
+    <div id="word-progress" aria-label="Word progress"></div>
+    <div class="header-actions">
+      <button id="stats-btn" aria-label="Statistics" title="Statistics">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+          <rect x="4" y="14" width="4" height="8" rx="1"/>
+          <rect x="10" y="8" width="4" height="14" rx="1"/>
+          <rect x="16" y="3" width="4" height="19" rx="1"/>
+        </svg>
+      </button>
+      <button id="help-btn" aria-label="How to play" title="How to play">?</button>
+    </div>
+  </header>
+
+  <main>
+
+    <div id="board" aria-label="Game board"></div>
+
+    <div id="result" aria-live="polite"></div>
+
+    <div id="keyboard" aria-label="On-screen keyboard">
+
+      <div class="key-row">
+        <button class="key"         data-key="q">Q</button>
+        <button class="key"         data-key="w">W</button>
+        <button class="key absent"  data-key="e">E</button>
+        <button class="key absent"  data-key="r">R</button>
+        <button class="key"         data-key="t">T</button>
+        <button class="key present" data-key="y">Y</button>
+        <button class="key absent"  data-key="u">U</button>
+        <button class="key absent"  data-key="i">I</button>
+        <button class="key absent"  data-key="o">O</button>
+        <button class="key absent"  data-key="p">P</button>
+      </div>
+
+      <div class="key-row">
+        <button class="key present" data-key="a">A</button>
+        <button class="key correct" data-key="s">S</button>
+        <button class="key absent"  data-key="d">D</button>
+        <button class="key"         data-key="f">F</button>
+        <button class="key"         data-key="g">G</button>
+        <button class="key absent"  data-key="h">H</button>
+        <button class="key"         data-key="j">J</button>
+        <button class="key"         data-key="k">K</button>
+        <button class="key absent"  data-key="l">L</button>
+      </div>
+
+      <div class="key-row">
+        <button class="key wide"        data-key="Enter">Enter</button>
+        <button class="key"             data-key="z">Z</button>
+        <button class="key"             data-key="x">X</button>
+        <button class="key absent"      data-key="c">C</button>
+        <button class="key"             data-key="v">V</button>
+        <button class="key"             data-key="b">B</button>
+        <button class="key absent"      data-key="n">N</button>
+        <button class="key absent"      data-key="m">M</button>
+        <button class="key wide"        data-key="Backspace">⌫</button>
+      </div>
+
+    </div><!-- #keyboard -->
+
+  </main>
+
+  <!-- Shown by the game script where analytics needs consent first, and from
+       Cookie settings. It sits in the page flow, so it never covers the game. -->
+  <section id="consent-banner" class="consent-banner" aria-labelledby="consent-text" hidden>
+    <p id="consent-text">May we use Google Analytics to see how the game is played? It sets cookies and sends usage data to Google. The game works the same either way. <a href="privacy.html">Privacy policy</a></p>
+    <p id="consent-status" class="consent-status" hidden></p>
+    <div class="date-actions">
+      <button id="consent-accept" class="date-action">Accept</button>
+      <button id="consent-decline" class="date-action">Decline</button>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    A free daily five-letter word game - a new puzzle every day.
+  </footer>
+
+  <div id="help-modal" class="modal-backdrop" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <h2 id="help-title">How to Play</h2>
+      <p>Each day (in UTC - Coordinated Universal Time) brings five words to guess, one at a time. Type any valid five-letter word and press <strong>Enter</strong> to submit.</p>
+      <p><strong>MAGIC</strong>, <strong>FLUTE</strong>, and <strong>WORDS</strong> are shown as free starter clues for each word. Together they cover 15 unique letters of the alphabet.</p>
+      <h3>Tile colors</h3>
+      <div class="help-tiles">
+        <div class="help-tile-row">
+          <div class="tile correct help-tile">A</div>
+          <span>Correct letter, correct position</span>
+        </div>
+        <div class="help-tile-row">
+          <div class="tile present help-tile">A</div>
+          <span>In the word, wrong position</span>
+        </div>
+        <div class="help-tile-row">
+          <div class="tile absent help-tile">A</div>
+          <span>Not in the word</span>
+        </div>
+      </div>
+      <h3>Stars</h3>
+      <p>Earn up to ★★★★★ per word: first try gets five stars, each extra guess costs one. A perfect day is 25 stars.</p>
+      <h3>Statistics</h3>
+      <p>Tap the <svg class="help-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="4" y="14" width="4" height="8" rx="1"/><rect x="10" y="8" width="4" height="14" rx="1"/><rect x="16" y="3" width="4" height="19" rx="1"/></svg> button at the top right to view your statistics: games played, stars earned, performance, and star distribution.</p>
+      <h3>Past games</h3>
+      <p>Tap the game number (e.g. <strong class="help-game-num">#1 · Today</strong>) at the top left to see every past game and replay any of them. Your stars are saved per game in this browser - to move them to another device, use <strong>Transfer stats</strong> in Statistics.</p>
+      <h3>Support</h3>
+      <p>Enjoying the game? You can help keep it going:</p>
+      <p class="kofi">
+        <a href="https://ko-fi.com/H4R229AAN0" target="_blank" rel="noopener"><img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" border="0" alt="Buy Me a Coffee at ko-fi.com" loading="lazy" /></a>
+      </p>
+      <p class="policy-link"><a href="about.html">About</a> · <a href="privacy.html">Privacy policy</a> · <button class="cookie-settings">Cookie settings</button></p>
+    </div>
+  </div>
+
+  <div id="date-modal" class="modal-backdrop" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="date-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <h2 id="date-title">Pick a Game</h2>
+      <p>Play any game back to <span id="date-earliest"></span>. Stars are saved per game in this browser - use <strong>Transfer stats</strong> to move them to another device.</p>
+      <p id="game-summary" class="game-summary"></p>
+      <div id="game-list" class="game-list" aria-label="Games"></div>
+      <div class="date-actions">
+        <button id="date-today" class="date-action primary">Jump to today</button>
+        <button id="date-transfer" class="date-action">Transfer stats</button>
+      </div>
+      <p class="kofi">
+        <a href="https://ko-fi.com/H4R229AAN0" target="_blank" rel="noopener"><img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" border="0" alt="Buy Me a Coffee at ko-fi.com" loading="lazy" /></a>
+      </p>
+    </div>
+  </div>
+
+  <div id="stats-modal" class="modal-backdrop" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="stats-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <h2 id="stats-title">Statistics</h2>
+      <div id="stats-content"></div>
+      <div class="stats-actions">
+        <button id="transfer-btn" class="date-action">Transfer stats to another device</button>
+      </div>
+      <p class="kofi">
+        <a href="https://ko-fi.com/H4R229AAN0" target="_blank" rel="noopener"><img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=6" border="0" alt="Buy Me a Coffee at ko-fi.com" loading="lazy" /></a>
+      </p>
+      <p class="policy-link"><a href="about.html">About</a> · <a href="privacy.html">Privacy policy</a> · <button class="cookie-settings">Cookie settings</button></p>
+    </div>
+  </div>
+
+  <div id="transfer-modal" class="modal-backdrop" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="transfer-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <h2 id="transfer-title">Transfer Stats</h2>
+      <p>Your games are saved in this browser only. To move them, send yourself this link and open it on the other device - no account needed.</p>
+      <p id="transfer-summary" class="game-summary"></p>
+      <div class="date-actions">
+        <button id="transfer-share" class="date-action primary">Share link</button>
+        <button id="transfer-copy" class="date-action">Copy link</button>
+      </div>
+      <h3>Receive</h3>
+      <p>If the link opens in the wrong browser or app, paste it here instead.</p>
+      <textarea id="transfer-input" class="transfer-input" rows="3" placeholder="Paste a transfer link" aria-label="Transfer link" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+      <div class="date-actions">
+        <button id="transfer-import" class="date-action">Import</button>
+      </div>
+      <p id="transfer-status" class="transfer-status" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div id="import-modal" class="modal-backdrop" hidden>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="import-title">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <h2 id="import-title">Import Stats</h2>
+      <p id="import-message"></p>
+      <p id="import-note" class="transfer-note">Games that are further along on this device stay as they are.</p>
+      <div class="date-actions">
+        <button id="import-confirm" class="date-action primary">Import</button>
+        <button id="import-cancel" class="date-action">Not now</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="data/words.js?v=2"></script>
+  <script src="js/magic-flute-words.js?v=10"></script>
+</body>
+</html>

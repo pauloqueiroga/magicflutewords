@@ -1,0 +1,99 @@
+/* Text pages (about.html, privacy.html). The game's own stylesheet locks the
+   page to one screen, so these pages use this one instead. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Clear Sans', 'Helvetica Neue', Arial, sans-serif;
+  background: #fff;
+  color: #1a1a1b;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+a { color: #1a1a1b; }
+
+.back {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 1.4rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 24px 0 4px;
+}
+
+.updated {
+  margin: 0 0 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #878a8c;
+}
+
+h2 {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-top: 1px solid #d3d6da;
+  margin: 24px 0 8px;
+  padding-top: 16px;
+}
+
+h3 {
+  font-size: 0.95rem;
+  margin: 16px 0 6px;
+}
+
+p, li { font-size: 0.95rem; }
+p { margin: 0 0 10px; }
+ul { margin: 0 0 10px; padding-left: 1.2em; }
+li { margin-bottom: 4px; }
+
+code {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 0.85em;
+}
+
+/* "Not to be confused with" line under the title. */
+.hatnote {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #565758;
+}
+
+/* Wide tables scroll inside their box rather than widening the page. */
+.table-wrap {
+  overflow-x: auto;
+  margin: 0 0 12px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+th, td {
+  border: 1px solid #d3d6da;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th,
+tbody th { background: #f6f7f8; }
+
+footer {
+  border-top: 1px solid #d3d6da;
+  margin-top: 24px;
+  padding-top: 16px;
+}
